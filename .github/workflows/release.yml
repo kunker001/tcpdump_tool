@@ -59,10 +59,11 @@ jobs:
           Copy-Item $exeSrc $exeDst
           Compress-Archive -Path $exeDst, "README.md" -DestinationPath $zipDst -Force
 
-          Get-ChildItem release -File | ForEach-Object {
+          $hashes = Get-ChildItem release -File | Where-Object { $_.Name -ne "SHA256SUMS.txt" } | ForEach-Object {
             $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower()
             "$hash  $($_.Name)"
-          } | Out-File -FilePath "release\SHA256SUMS.txt" -Encoding utf8
+          }
+          $hashes | Out-File -FilePath "release\SHA256SUMS.txt" -Encoding utf8
 
           Get-ChildItem release
 
