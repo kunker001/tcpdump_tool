@@ -34,11 +34,17 @@ jobs:
       - name: Install Wails CLI
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
+      - name: Build frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+
       - name: Run Go unit tests
         run: go test -v ./...
 
       - name: Build Windows executable with Wails
-        run: wails build -platform windows/amd64
+        run: wails build -platform windows/amd64 -s
 
       - name: Package release artifacts
         shell: pwsh
